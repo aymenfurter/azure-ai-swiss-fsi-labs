@@ -1,0 +1,3 @@
+{"id": "1", "question": "What is Satya Nadella's date of birth?", "ground_truth": "19 August 1967"}
+{"id": "2", "question": "What are Mustafa Suleyman's current affiliations?", "ground_truth": "CEO of Microsoft AI, Co-founder of Inflection AI"}
+{"id": "3", "question": "When did Sam Altman become CEO of OpenAI?", "ground_truth": "2019"}

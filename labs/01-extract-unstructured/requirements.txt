@@ -1,0 +1,8 @@
+requests
+wikipedia
+python-dotenv
+typing-extensions
+pandas
+pydub
+pyaudio
+jinja2

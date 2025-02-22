@@ -1,0 +1,4 @@
+thefuzz
+openpyxl
+semantic-kernel
+gradio==5.14.0
