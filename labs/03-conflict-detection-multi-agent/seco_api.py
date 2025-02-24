@@ -46,19 +46,37 @@ class SecoClient:
                 return cache_file
         
         # Download new file
-        response = requests.get(self.EXCEL_URL, params=params)
-        response.raise_for_status()
-        
-        with open(cache_file, "wb") as f:
-            f.write(response.content)
+        try:
+            response = requests.get(self.EXCEL_URL, params=params)
+            response.raise_for_status()
             
-        return cache_file
+            with open(cache_file, "wb") as f:
+                f.write(response.content)
+                
+            return cache_file
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to download sanctions list: {e}")
+            backup_file = Path(".excel.xlsx")
+            if backup_file.exists():
+                print("Using local backup file.")
+                return backup_file
+            else:
+                raise Exception("Failed to download sanctions list and no backup available.") from e
 
     def _load_sanctions(self) -> List[str]:
         """Load and parse sanctions Excel file"""
         if self._sanctions_list is None:
             excel_file = self._download_excel()
-            df = pd.read_excel(excel_file)
+            try:
+                df = pd.read_excel(excel_file)
+            except ValueError as e:
+                print(f"Failed to read excel file: {e}")
+                backup_file = Path(".excel.xlsx")
+                if backup_file.exists():
+                    print("Using local backup file.")
+                    df = pd.read_excel(backup_file)
+                else:
+                    raise Exception("Failed to read sanctions list and no backup available.") from e
             # Get unique names from column 5 (index 4)
             self._sanctions_list = df.iloc[:, 4].unique().tolist()
         return self._sanctions_list
